@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Zerobased
+namespace Zerobased.Extensions
 {
     public static class GenericExtensions
     {
@@ -18,7 +18,7 @@ namespace Zerobased
             where TTo : class
             where TFrom : class
         {
-            Check.NotNull(targetObj, "targetObj");
+            Check.NotNull(targetObj, nameof(targetObj));
 
             if (sourceObj == null)
             {
@@ -48,7 +48,7 @@ namespace Zerobased
                 catch (Exception)
                 {
                     System.Diagnostics.Debug.WriteLine(
-                        "Property {0} has different types in {1} and {2}".FormatWith(link.FromProp.Name, link.FromProp.ReflectedType.Name, link.ToProperty.ReflectedType.Name));
+                        "Property {0} has different types in {1} and {2}".FormatWith(link.FromProp.Name, sourceObj.GetType().Name, targetObj.GetType().Name));
                 }
             }
 

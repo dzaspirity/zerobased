@@ -8,7 +8,7 @@ namespace Zerobased
     /// </summary>
     public static class ZRandom
     {
-        private static Random _rand = new Random();
+        private static readonly Random _rand = new Random();
 
         /// <summary>
         ///     Returns a nonnegative random number.
@@ -95,7 +95,7 @@ namespace Zerobased
         {
             if (maxValue < 0)
             {
-                throw new ArgumentOutOfRangeException("maxValue", "maxValue must be greater than or equal to zero.");
+                throw new ArgumentOutOfRangeException(nameof(maxValue), "maxValue must be greater than or equal to zero.");
             }
             return _rand.NextDouble() * maxValue;
         }
@@ -122,7 +122,7 @@ namespace Zerobased
         {
             if (minValue > maxValue)
             {
-                throw new ArgumentOutOfRangeException("maxValue must be greater than or equal to minValue.");
+                throw new ArgumentException("maxValue must be greater than or equal to minValue.");
             }
             return _rand.NextDouble() * (maxValue - minValue) + minValue;
         }

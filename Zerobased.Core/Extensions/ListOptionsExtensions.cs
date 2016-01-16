@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Zerobased
+namespace Zerobased.Extensions
 {
     public static class ListInfoExtensions
     {
@@ -10,13 +10,14 @@ namespace Zerobased
         /// Applys paging and sorting to sequence.
         /// </summary>
         /// <typeparam name="T">Type of elements of sequence.</typeparam>
+        /// <param name="options"></param>
         /// <param name="items">Original sequence.</param>
         /// <returns>One page of sequence with sorting as System.Collections.Generic.List<T>.</returns>
         public static List<T> Apply<T>(this ListOptions options, IEnumerable<T> items)
         {
             if (options == null)
             {
-                options = ListOptions.Default();
+                options = ListOptions.GetDefault();
             }
 
             var query = items;
@@ -54,11 +55,13 @@ namespace Zerobased
             return query.ToList();
         }
 
+        private static readonly string[] _sortSeparators = new[] { ",", " " };
+
         private static IEnumerable<SortDesc> GetSorts(string sort)
         {
             if (!sort.IsNullOrWhiteSpace())
             {
-                foreach (string str in sort.Split(new[] { ZChar.Comma, ZChar.Space }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string str in sort.Split(_sortSeparators, StringSplitOptions.RemoveEmptyEntries))
                 {
                     var sd = new SortDesc { PropertyName = str };
 

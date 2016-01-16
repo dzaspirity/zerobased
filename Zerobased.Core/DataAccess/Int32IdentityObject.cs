@@ -5,12 +5,11 @@ namespace Zerobased.DataAccess
     /// <summary>
     /// Class to represent identity objects with Int32 Id property.
     /// </summary>
-    public abstract class Int32IdentityObject : IInt32Identity, IEquatable<IIdentity<int>>
+    public abstract class Int32IdentityObject : IInt32Identity
     {
-        private static object _newIdIteratorResetLock = -1;
+        private static readonly object _newIdIteratorResetLock = new object();
         private static int _newIdIterator = -1;
         private int _id;
-        private int? _hashCode;
         private string _typeName;
 
         protected Int32IdentityObject(int id)
@@ -29,13 +28,13 @@ namespace Zerobased.DataAccess
         public virtual int Id
         {
             get { return _id; }
-            set { _id = value; _hashCode = null; }
+            set { _id = value; }
         }
 
         /// <summary>
         /// Define that object doen't have record in storage
         /// </summary>
-        bool IIdentity<int>.IsNew { get { return Id < 0; } }
+        bool IIdentity<int>.IsNew => Id < 0;
 
         public bool Equals(IIdentity<int> other)
         {
@@ -48,19 +47,14 @@ namespace Zerobased.DataAccess
         {
             var other = obj as IIdentity<int>;
             if (other == null) return false;
-            if (object.ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(this, other)) return true;
 
             return Equals(other);
         }
 
         public override int GetHashCode()
         {
-            if (_hashCode == null)
-            {
-                _hashCode = (GetTypeName() + "_" + Id.ToString()).GetHashCode();
-            }
-
-            return _hashCode.Value;
+            return (GetTypeName() + "_" + Id).GetHashCode();
         }
 
         private string GetTypeName()

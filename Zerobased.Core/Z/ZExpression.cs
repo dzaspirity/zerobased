@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
+using Zerobased.Extensions;
 
 namespace Zerobased
 {
@@ -85,13 +86,13 @@ namespace Zerobased
         {
             if (expr.Type == typeof(void))
             {
-                throw new ArgumentException("Expression must return value to create ChangeType expression.", "expr");
+                throw new ArgumentException("Expression must return value to create ChangeType expression.", nameof(expr));
             }
         }
 
 
         private static readonly MethodInfo ConvertChangeTypeMethod =
-            typeof(System.Convert).GetMethod("ChangeType", new[] { typeof(object), typeof(Type) });
+            typeof(Convert).GetMethod("ChangeType", new[] { typeof(object), typeof(Type) });
 
         private static readonly MethodInfo TypeConverterConvertToMethod =
             typeof(TypeConverter).GetMethod("ConvertTo", new[] { typeof(object), typeof(Type) });

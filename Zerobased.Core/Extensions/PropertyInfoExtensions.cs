@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace Zerobased
+namespace Zerobased.Extensions
 {
     public static class PropertyInfoExtensions
     {
-        internal static readonly string[] KeyPropertyNames = new[]
+        internal static readonly IReadOnlyCollection<string> KeyPropertyNames = new ReadOnlyCollection<string>( new[]
             {
                 "Id",
                 "{0}Id",
                 "{0}_Id"
-            };
+            });
 
         /// <summary>
         ///     Determines that property has System.ComponentModel.DataAnnotations.RequiredAttribute
@@ -37,8 +39,14 @@ namespace Zerobased
         ///     or its name matchs with one of PropertyInfoExtensions.KeyPropertyNames.
         /// </summary>
         /// <param name="property">Property to check.</param>
+        /// <param name="baseClass"></param>
         public static bool IsKey(this PropertyInfo property, string baseClass = null)
         {
+            if (property.ReflectedType == null)
+            {
+                throw new NotSupportedException("Method IsKey does not supports global members.");
+            }
+
             bool isKey = property.HasAttribute<KeyAttribute>();
 
             if (!isKey)

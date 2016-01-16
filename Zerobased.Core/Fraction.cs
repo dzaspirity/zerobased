@@ -113,15 +113,13 @@ namespace Zerobased
                     }
                     else
                     {
-                        int iQuotient = 0;
-                        int iDivisor = int.MaxValue;
+                        int iQuotient;
+                        int iDivisor;
 
                         if (char.IsDigit(textToParse[iIndex]))
                         {
-                            int iWholePart = 0;
-
                             // it was a whole part and we continue to look for the quotient
-                            iWholePart = iNumber;
+                            int iWholePart = iNumber;
 
                             // Find end of the number
                             iIndexStart = iIndex; // Remember start

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Zerobased
+namespace Zerobased.Extensions
 {
-    public static class ICollectionExtensions
+    public static class CollectionExtensions
     {
         /// <summary>
         /// Determines the index of a item that matchs with <paramref name="predicate"/> in the System.Collections.Generic.ICollection<T>.

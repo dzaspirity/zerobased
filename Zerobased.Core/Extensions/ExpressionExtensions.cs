@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Zerobased
+namespace Zerobased.Extensions
 {
     public static class ExpressionExtensions
     {
@@ -30,7 +30,7 @@ namespace Zerobased
                     return memberExpression.Member.Name;
             }
 
-            throw new ArgumentException("Invalid expression.", "propertyExpression");
+            throw new ArgumentException("Invalid expression.", nameof(propertyExpression));
         }
     }
 }

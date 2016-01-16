@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Zerobased
+namespace Zerobased.Extensions
 {
     /// <summary>
-    /// Extension methods for IDictionary<TKey, TValue> interface.
+    /// Extension methods for IDictionary[TKey, TValue] interface.
     /// </summary>
-    public static class IDictionaryExtensions
+    public static class DictionaryExtensions
     {
         /// <summary>
         ///     Returns stored value if <paramref name="key"/> exists in dictionary.
-        ///     Otherwise add <paramref name="defaultValue"/> to dictionary and return it.
+        ///     Otherwise add <paramref name="@default"/> to dictionary and return it.
         /// </summary>
         /// <typeparam name="TKey">
         ///     The type of keys in the dictionary.
@@ -24,11 +24,11 @@ namespace Zerobased
         /// <param name="key">
         ///     The key of the element to get.
         /// </param>
-        /// <param name="defaultValue">
+        /// <param name="default">
         ///     Value that adds and returns if dictionary doesn't have specified <paramref name="key"/>.
         /// </param>
         /// <returns>
-        ///     The element with the specified <paramref name="key"/> or <paramref name="defaultValue"/> 
+        ///     The element with the specified <paramref name="key"/> or <paramref name="@default"/> 
         ///     if key does not exists in dictionary.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
@@ -56,7 +56,7 @@ namespace Zerobased
 
         /// <summary>
         ///     Returns stored value if <paramref name="key"/> exists in dictionary.
-        ///     Otherwise returns <paramref name="defaultValue"/>.
+        ///     Otherwise returns <paramref name="default"/>.
         /// </summary>
         /// <typeparam name="TKey">
         ///     The type of keys in the dictionary.
@@ -70,11 +70,11 @@ namespace Zerobased
         /// <param name="key">
         ///     The key of the element to get.
         /// </param>
-        /// <param name="defaultValue">
+        /// <param name="default">
         ///     Value that returns if dictionary doesn't have specified <paramref name="key"/>.
         /// </param>
         /// <returns>
-        ///     The element with the specified <paramref name="key"/> or <paramref name="defaultValue"/> 
+        ///     The element with the specified <paramref name="key"/> or <paramref name="default"/> 
         ///     if key does not exists in dictionary.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">

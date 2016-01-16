@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Zerobased
+namespace Zerobased.Extensions
 {
     public static class MemberInfoExtensions
     {
@@ -44,7 +44,7 @@ namespace Zerobased
         ///     Determines if a custom attribute applied to a member of a type. Parameters specify
         ///     the member, and the type of the custom attribute to search for.
         /// </summary>
-        /// <typeparam name="T">
+        /// <typeparam name="TAttr">
         ///      The type, or a base type, of the custom attribute to search for.
         /// </typeparam>
         /// <param name="info">

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 
-namespace Zerobased
+namespace Zerobased.Extensions
 {
     public static class StringExtensions
     {
@@ -25,7 +26,6 @@ namespace Zerobased
         /// Parse int from string
         /// </summary>
         /// <param name="str"></param>
-        /// <param name="defaultValue"></param>
         /// <returns>Integer value, if NaN returns 0</returns>
         public static int ToInt(this string str)
         {
@@ -33,6 +33,12 @@ namespace Zerobased
             return i;
         }
 
+        /// <summary>
+        /// Parse int from string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns>Integer value, if NaN returns <paramref name="defaultValue"/></returns>
         public static long ToLong(this string str, long defaultValue = default(long))
         {
             long i;
@@ -57,7 +63,7 @@ namespace Zerobased
 
         public static string Wrap(this string str, string startWrapper, string endWrapper = null)
         {
-            Check.NotNullOrEmpty(startWrapper, "startWrapper");
+            Check.NotNullOrEmpty(startWrapper, nameof(startWrapper));
 
             return string.Concat(startWrapper, str, (endWrapper ?? startWrapper));
         }
@@ -120,21 +126,25 @@ namespace Zerobased
             return parts;
         }
 
+        [StringFormatMethod("format")]
         public static string FormatWith(this string format, params object[] args)
         {
             return string.Format(format, args);
         }
 
+        [StringFormatMethod("format")]
         public static string FormatWith(this string format, object arg0)
         {
             return string.Format(format, arg0);
         }
 
+        [StringFormatMethod("format")]
         public static string FormatWith(this string format, object arg0, object arg1)
         {
             return string.Format(format, arg0, arg1);
         }
 
+        [StringFormatMethod("format")]
         public static string FormatWith(this string format, object arg0, object arg1, object arg2)
         {
             return string.Format(format, arg0, arg1, arg2);
@@ -142,7 +152,7 @@ namespace Zerobased
 
         public static string TrimSafe(this string str)
         {
-            return str == null ? string.Empty : str.Trim();
+            return str?.Trim() ?? string.Empty;
         }
 
         /// <summary>
@@ -164,7 +174,7 @@ namespace Zerobased
         public static byte[] GetBytes(this string str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)];
-            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Zerobased
+namespace Zerobased.Extensions
 {
     public static class ExceptionExtensions
     {
@@ -37,23 +37,20 @@ namespace Zerobased
         }
 
         /// <summary>
-        /// Expand <paramref name="exeption"/> and inner exceptions to string.
+        /// Expand <paramref name="exception"/> and inner exceptions to string.
         /// </summary>
         /// <param name="exception"></param>
-        /// <param name="format"></param>
+        /// <param name="format">
+        /// {0} - GetType().FullName, {1} - Message, {2} - StackTrace
+        /// </param>
         /// <returns></returns>
         public static string ExpandToString(this Exception exception, string format = null)
         {
+            const string defaultExceptionFormat = "{0}: {1}\r\nStack trace:\r\n{2}";
+
             if (format.IsNullOrWhiteSpace())
             {
-                format = new string[] 
-                    { 
-                        "{0}: {1}", 
-                        "Stack trace:",
-                        "{2}",
-                        "",
-                        ""
-                    }.Join(Environment.NewLine);
+                format = defaultExceptionFormat;
             }
 
             StringBuilder builder = exception

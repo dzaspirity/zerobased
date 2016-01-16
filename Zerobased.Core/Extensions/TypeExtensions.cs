@@ -4,14 +4,14 @@ using System.Linq;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 
-namespace Zerobased
+namespace Zerobased.Extensions
 {
     public static class TypeExtensions
     {
-        private static ConcurrentDictionary<Type, TypeConverter> _typeConverterCache = new ConcurrentDictionary<Type, TypeConverter>();
+        private static readonly ConcurrentDictionary<Type, TypeConverter> _typeConverterCache = new ConcurrentDictionary<Type, TypeConverter>();
         
         /// <summary>
-        /// Check if <paramref name="type"/> is System.Nullable<T>.
+        /// Check if <paramref name="type"/> is System.Nullable[T].
         /// </summary>
         /// <param name="type">Type to check.</param>
         /// <returns></returns>
@@ -22,12 +22,12 @@ namespace Zerobased
 
         /// <summary>
         ///     Returns the underlying type argument of the specified <paramref name="type"/>.
-        ///     If <paramref name="type"/> is not System.Nullable<T>, 
+        ///     If <paramref name="type"/> is not System.Nullable[T], 
         ///     returns specified <paramref name="type"/> itself.
         /// </summary>
         /// <param name="type">A System.Type object that describes a closed generic nullable type.</param>
         /// <returns>
-        ///     If <paramref name="type"/> is System.Nullable<T> returns underlying type argument.
+        ///     If <paramref name="type"/> is System.Nullable[T] returns underlying type argument.
         ///     Overwise returns <paramref name="type"/> itself.
         /// </returns>
         public static Type ExtractNullable(this Type type)
@@ -75,7 +75,7 @@ namespace Zerobased
         /// <returns>A System.ComponentModel.TypeConverter for the specified type.</returns>
         public static TypeConverter GetConverter(this Type type)
         {
-            return _typeConverterCache.GetOrAdd(type, t => TypeDescriptor.GetConverter(t));
+            return _typeConverterCache.GetOrAdd(type, TypeDescriptor.GetConverter);
         }
     }
 }

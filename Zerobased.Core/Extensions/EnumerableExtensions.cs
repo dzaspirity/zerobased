@@ -4,9 +4,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Zerobased
+namespace Zerobased.Extensions
 {
-    public static class IEnumerableExtensions
+    public static class EnumerableExtensions
     {
         /// <summary>
         /// Execute action for each element in sequence.
@@ -18,12 +18,12 @@ namespace Zerobased
         {
             if (source == null)
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (action == null)
             {
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
             }
 
             foreach (T item in source)
@@ -42,12 +42,12 @@ namespace Zerobased
         {
             if (source == null)
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (action == null)
             {
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
             }
 
             foreach (T item in source)
@@ -56,7 +56,10 @@ namespace Zerobased
                 {
                     action(item);
                 }
-                catch { }
+                catch
+                {
+                    // do nothing
+                }
             }
         }
 
@@ -73,12 +76,12 @@ namespace Zerobased
         {
             if (source == null)
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (action == null)
             {
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
             }
 
             int index = 0;
@@ -92,12 +95,12 @@ namespace Zerobased
         {
             if (source == null)
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (action == null)
             {
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
             }
 
             foreach (T item in source)
@@ -111,12 +114,12 @@ namespace Zerobased
         {
             if (source == null)
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (action == null)
             {
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
             }
 
             foreach (T item in source)
@@ -162,15 +165,15 @@ namespace Zerobased
 
         /// <summary>
         ///     Groups the elements of a sequence according to a specified key selector function 
-        ///     and convert it into System.Collections.Generic.Dictionary<TKey, T>
+        ///     and convert it into System.Collections.Generic.Dictionary[TKey, T]
         ///     with key got from <paramref name="keySelector"/> function.
         /// </summary>
         /// <typeparam name="TKey">The type of the key returned by keySelector.</typeparam>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">An System.Collections.Generic.IEnumerable<T> whose elements to group.</param>
+        /// <param name="source">An System.Collections.Generic.IEnumerable[T] whose elements to group.</param>
         /// <param name="keySelector">A function to extract the key for each element.</param>
         /// <returns>
-        ///     System.Collections.Generic.Dictionary<TKey, T> where keys are results
+        ///     System.Collections.Generic.Dictionary[TKey, T] where keys are results
         ///     of <paramref name="keySelector"/> functions and values are lists of
         ///     grouped by <paramref name="keySelector"/> elements.
         /// </returns>
@@ -187,10 +190,10 @@ namespace Zerobased
         /// </summary>
         /// <typeparam name="T">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to order.</param>
-        /// <param name="property">Property path to sorting.</param>
+        /// <param name="propertyPath">Property path to sorting.</param>
         /// <param name="desc">Sort in descending order if <value>TRUE</value>, overwise in ascending order.</param>
         /// <returns>
-        ///     An System.Linq.IOrderedEnumerable<TElement> whose elements are sorted according to a property path.
+        ///     An System.Linq.IOrderedEnumerable[T] whose elements are sorted according to a property path.
         /// </returns>
         public static IOrderedEnumerable<T> OrderBy<T>(this IEnumerable<T> source, string propertyPath, bool desc = false)
         {
@@ -209,11 +212,11 @@ namespace Zerobased
         ///     order according to a key.
         /// </summary>
         /// <typeparam name="T">The type of the elements of source.</typeparam>
-        /// <param name="source">An System.Linq.IOrderedEnumerable<TElement> that contains elements to sort.</param>
-        /// <param name="property">Property path to sorting.</param>
+        /// <param name="source">An System.Linq.IOrderedEnumerable[T] that contains elements to sort.</param>
+        /// <param name="propertyPath">Property path to sorting.</param>
         /// <param name="desc">Sort in descending order if <value>TRUE</value>, overwise in ascending order.</param>
         /// <returns>
-        ///     An System.Linq.IOrderedEnumerable<TElement> whose elements are sorted according to a property path.
+        ///     An System.Linq.IOrderedEnumerable[T] whose elements are sorted according to a property path.
         /// </returns>
         public static IOrderedEnumerable<T> ThenBy<T>(this IOrderedEnumerable<T> source, string propertyPath, bool desc = false)
         {
@@ -230,11 +233,8 @@ namespace Zerobased
         public static TSource MinBy<TSource, TProp>(this IEnumerable<TSource> source, Func<TSource, TProp> selector)
             where TProp : IComparable<TProp>
         {
-            Check.NotNull(source, "source");
-            Check.NotNull(selector, "selector");
-
-            TProp minValue;
-            TSource min;
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(selector, nameof(selector));
 
             var enumerator = source.GetEnumerator();
 
@@ -243,8 +243,8 @@ namespace Zerobased
                 throw new InvalidOperationException("The source sequence is empty");
             }
 
-            min = enumerator.Current;
-            minValue = selector(enumerator.Current);
+            var min = enumerator.Current;
+            var minValue = selector(enumerator.Current);
 
             while (enumerator.MoveNext())
             {
@@ -264,11 +264,8 @@ namespace Zerobased
         public static TSource MaxBy<TSource, TProp>(this IEnumerable<TSource> source, Func<TSource, TProp> selector)
             where TProp : IComparable<TProp>
         {
-            Check.NotNull(source, "source");
-            Check.NotNull(selector, "selector");
-
-            TProp maxValue;
-            TSource max;
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(selector, nameof(selector));
 
             var enumerator = source.GetEnumerator();
 
@@ -277,8 +274,8 @@ namespace Zerobased
                 throw new InvalidOperationException("The source sequence is empty");
             }
 
-            max = enumerator.Current;
-            maxValue = selector(enumerator.Current);
+            var max = enumerator.Current;
+            var maxValue = selector(enumerator.Current);
 
             while (enumerator.MoveNext())
             {
@@ -370,7 +367,7 @@ namespace Zerobased
         /// </returns>
         public static string Join<T>(this IEnumerable<T> values, string separator, Func<T, string> toString)
         {
-            return string.Join(separator, values.Select(i => toString(i)));
+            return string.Join(separator, values.Select(toString));
         }
 
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source)
@@ -411,28 +408,28 @@ namespace Zerobased
         }
 
 
-        private static MethodInfo OrderByDescendingMethod = typeof(Enumerable)
+        private static readonly MethodInfo OrderByDescendingMethod = typeof(Enumerable)
             .GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Single(method => method.Name == "OrderByDescending"
                             && method.IsGenericMethodDefinition
                             && method.GetGenericArguments().Length == 2
                             && method.GetParameters().Length == 2);
 
-        private static MethodInfo OrderByMethod = typeof(Enumerable)
+        private static readonly MethodInfo OrderByMethod = typeof(Enumerable)
             .GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Single(method => method.Name == "OrderBy"
                             && method.IsGenericMethodDefinition
                             && method.GetGenericArguments().Length == 2
                             && method.GetParameters().Length == 2);
 
-        private static MethodInfo ThenByDescendingMethod = typeof(Enumerable)
+        private static readonly MethodInfo ThenByDescendingMethod = typeof(Enumerable)
             .GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Single(method => method.Name == "ThenByDescending"
                             && method.IsGenericMethodDefinition
                             && method.GetGenericArguments().Length == 2
                             && method.GetParameters().Length == 2);
 
-        private static MethodInfo ThenByMethod = typeof(Enumerable)
+        private static readonly MethodInfo ThenByMethod = typeof(Enumerable)
             .GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Single(method => method.Name == "ThenBy"
                             && method.IsGenericMethodDefinition

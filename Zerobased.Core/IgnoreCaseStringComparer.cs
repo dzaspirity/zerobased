@@ -6,16 +6,17 @@ namespace Zerobased
     public class IgnoreCaseStringComparer : IEqualityComparer<string>
     {
         private static readonly Lazy<IgnoreCaseStringComparer> _instance = new Lazy<IgnoreCaseStringComparer>();
-        public static IgnoreCaseStringComparer Instance { get { return _instance.Value; } }
+
+        public static IgnoreCaseStringComparer Instance => _instance.Value;
 
         public bool Equals(string x, string y)
         {
-            return x == null ? (y == null) : x.Equals(y, StringComparison.CurrentCultureIgnoreCase);
+            return x?.Equals(y, StringComparison.CurrentCultureIgnoreCase) ?? y == null;
         }
 
         public int GetHashCode(string obj)
         {
-            return obj == null ? int.MinValue : obj.ToUpper().GetHashCode();
+            return obj?.ToUpper().GetHashCode() ?? int.MinValue;
         }
     }
 }

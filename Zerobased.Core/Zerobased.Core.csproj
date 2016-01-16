@@ -37,6 +37,10 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -48,41 +52,37 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Check.cs" />
-    <Compile Include="DataAccess\IIdentity.cs" />
-    <Compile Include="DataAccess\IGuidIdentity.cs" />
-    <Compile Include="DataAccess\IInt32Identity.cs" />
-    <Compile Include="DataAccess\GuidIdentityObject.cs" />
-    <Compile Include="DataAccess\Int32IdentityObject.cs" />
-    <Compile Include="DataAccess\IRepository.cs" />
+    <Compile Include="Extensions\DbDataReaderExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\GenericExtensions.cs" />
-    <Compile Include="Extensions\ICollectionExtensions.cs" />
-    <Compile Include="Extensions\IDictionaryExtensions.cs" />
-    <Compile Include="Extensions\IEnumerableExtensions.cs" />
-    <Compile Include="Extensions\ListOptionsExtensions.cs" />
+    <Compile Include="Extensions\CollectionExtensions.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\PropertyInfoExtensions.cs" />
+    <Compile Include="Extensions\SqlCommandExtensions.cs" />
+    <Compile Include="Extensions\SqlConnectionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="ITitled.cs" />
     <Compile Include="Z\ZAttribute.cs" />
-    <Compile Include="Z\ZChar.cs" />
     <Compile Include="Z\ZEnum.cs" />
     <Compile Include="Z\ZExpression.cs" />
     <Compile Include="Z\ZRandom.cs" />
-    <Compile Include="Z\ZString.cs" />
     <Compile Include="Fraction.cs" />
     <Compile Include="IDictionaryable.cs" />
     <Compile Include="IgnoreCaseStringComparer.cs" />
     <Compile Include="INamed.cs" />
     <Compile Include="IValued.cs" />
-    <Compile Include="ListOptions.cs" />
     <Compile Include="Locker.cs" />
     <Compile Include="MonitoredScope.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeAttribute.cs" />
     <Compile Include="Valued.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

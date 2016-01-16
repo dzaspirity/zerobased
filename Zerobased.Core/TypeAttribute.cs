@@ -5,14 +5,12 @@ namespace Zerobased
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public class TypeAttribute : Attribute
     {
-        private readonly Type _type;
-
         public TypeAttribute(Type type)
         {
-            _type = type;
+            Type = type;
         }
 
-        public Type Type { get { return _type; } }
+        public Type Type { get; }
     }
 
     public class StringAttribute : TypeAttribute

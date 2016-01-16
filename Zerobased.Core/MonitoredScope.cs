@@ -1,10 +1,12 @@
 ﻿using System;
+using Zerobased.Extensions;
 
 namespace Zerobased
 {
     public class MonitoredScope : IDisposable
     {
-        private static int _instancesCount = 0;
+        private const char LevelChar = ' ';
+        private static int _instancesCount;
         private readonly Action<TimeSpan, string> _onMessage;
         private readonly string _name;
         private readonly DateTime _ctorTime = DateTime.UtcNow;
@@ -15,7 +17,7 @@ namespace Zerobased
             _level = ++_instancesCount;
             if (onMessage == null)
             {
-                throw new ArgumentNullException("onMessage");
+                throw new ArgumentNullException(nameof(onMessage));
             }
 
             _name = name.IsNullOrWhiteSpace() ? DateTime.UtcNow.ToString("hh:mm:ss.ff") : name;
@@ -34,7 +36,7 @@ namespace Zerobased
 
         private void RaiseMessage(string message)
         {
-            _onMessage(DateTime.UtcNow - _ctorTime, "{0:G}{3}'{1}': {2}".FormatWith(DateTime.UtcNow, _name, message, string.Empty.PadLeft(_level*2, ZChar.Space)));
+            _onMessage(DateTime.UtcNow - _ctorTime, "{0:G}{3}'{1}': {2}".FormatWith(DateTime.UtcNow, _name, message, string.Empty.PadLeft(_level*2, LevelChar)));
         }
 
         public void Dispose()
