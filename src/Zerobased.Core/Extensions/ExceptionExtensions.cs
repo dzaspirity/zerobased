@@ -5,10 +5,13 @@ using System.Text;
 
 namespace Zerobased.Extensions
 {
+    /// <summary>
+    ///     Extension methods for <see cref="Exception"/>
+    /// </summary>
     public static class ExceptionExtensions
     {
         /// <summary>
-        /// Aggregates inner exceptions to <typeparamref name="TAccumulate"/> object.
+        ///     Aggregates <paramref name="exception"/> and inner exceptions to <typeparamref name="TAccumulate"/> object.
         /// </summary>
         /// <typeparam name="TAccumulate"></typeparam>
         /// <param name="exception"></param>
@@ -21,9 +24,9 @@ namespace Zerobased.Extensions
         }
 
         /// <summary>
-        /// Expand inner exceptions to enumerable.
+        ///     Expands <paramref name="exception"/> and inner exceptions to enumerable.
         /// </summary>
-        /// <param name="exception"></param>
+        /// <param name="exception">Exception to expand</param>
         /// <returns></returns>
         public static IEnumerable<Exception> Expand(this Exception exception)
         {
@@ -37,22 +40,19 @@ namespace Zerobased.Extensions
         }
 
         /// <summary>
-        /// Expand <paramref name="exception"/> and inner exceptions to string.
+        ///     Expands <paramref name="exception"/> and inner exceptions to string.
         /// </summary>
         /// <param name="exception"></param>
         /// <param name="format">
-        /// {0} - GetType().FullName, {1} - Message, {2} - StackTrace
+        ///     {0} - GetType().FullName, {1} - Message, {2} - StackTrace
         /// </param>
         /// <returns></returns>
         public static string ExpandToString(this Exception exception, string format = null)
         {
-            const string defaultExceptionFormat = "{0}: {1}\r\nStack trace:\r\n{2}";
-
             if (format.IsNullOrWhiteSpace())
             {
-                format = defaultExceptionFormat;
+                format = $"{{0}}: {{1}}{Environment.NewLine}Stack trace:{Environment.NewLine}{{2}}";
             }
-
             StringBuilder builder = exception
                 .Aggregate(new StringBuilder(), (sb, e) => sb.AppendFormat(format, e.GetType().FullName, e.Message, e.StackTrace));
             return builder.ToString();

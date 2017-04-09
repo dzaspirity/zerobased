@@ -9,57 +9,37 @@ namespace Zerobased.Extensions
     public static class StringExtensions
     {
         /// <summary>
-        /// Parse int from string
+        /// Parses int from string
         /// </summary>
         /// <param name="str"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns>Integer value, if NaN returns <paramref name="defaultValue"/></returns>
-        public static int ToInt(this string str, int defaultValue)
-        {
-            int i;
-            if (!int.TryParse(str, out i))
-                return defaultValue;
-            return i;
-        }
+        /// <param name="fallbackValue"></param>
+        /// <returns>Integer value, if NaN returns <paramref name="fallbackValue"/></returns>
+        public static int ToInt(this string str, int fallbackValue) => int.TryParse(str, out int @int) ? @int : fallbackValue;
 
         /// <summary>
         /// Parse int from string
         /// </summary>
         /// <param name="str"></param>
         /// <returns>Integer value, if NaN returns 0</returns>
-        public static int ToInt(this string str)
-        {
-            int i = str.ToInt(default(int));
-            return i;
-        }
+        public static int ToInt(this string str) => str.ToInt(default(int));
 
         /// <summary>
         /// Parse int from string
         /// </summary>
         /// <param name="str"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns>Integer value, if NaN returns <paramref name="defaultValue"/></returns>
-        public static long ToLong(this string str, long defaultValue = default(long))
-        {
-            long i;
-            if (!long.TryParse(str, out i))
-                return defaultValue;
-            return i;
-        }
+        /// <param name="fallbackValue"></param>
+        /// <returns>Integer value, if NaN returns <paramref name="fallbackValue"/></returns>
+        public static long ToLong(this string str, long fallbackValue = default(long)) => long.TryParse(str, out long @long) ? @long : fallbackValue;
 
-        public static double ToDouble(this string str, double defaultValue, bool tryParseFraction = true)
+        public static double ToDouble(this string str, double fallbackValue, bool tryParseFraction = true)
         {
             double d;
             if (!double.TryParse(str, out d) && tryParseFraction && !Fraction.TryParse(str, out d))
-                return defaultValue;
+                return fallbackValue;
             return d;
         }
 
-        public static double ToDouble(this string str, bool tryParseFraction = true)
-        {
-            double d = str.ToDouble(default(double), tryParseFraction);
-            return d;
-        }
+        public static double ToDouble(this string str, bool tryParseFraction = true) => str.ToDouble(default(double), tryParseFraction);
 
         public static string Wrap(this string str, string startWrapper, string endWrapper = null)
         {
@@ -68,20 +48,16 @@ namespace Zerobased.Extensions
             return string.Concat(startWrapper, str, (endWrapper ?? startWrapper));
         }
 
-        public static string WrapByTag(this string source, string tag)
-        {
-            string tagged = string.Format("<{0}>{1}</{0}>", tag, source);
-            return tagged;
-        }
+        public static string WrapByTag(this string source, string tag) => "<{0}>{1}</{0}>".FormatWith(tag, source);
 
         public static string WrapByTag(this string source, string tag, IDictionary<string, string> attrs)
         {
             var sb = new StringBuilder();
             sb.Append("<" + tag);
-
             foreach (var attr in attrs)
+            {
                 sb.AppendFormat(" {0}='{1}'", attr.Key, attr.Value);
-
+            }
             sb.AppendFormat(">{0}</{1}>", source, tag);
             return sb.ToString();
         }
@@ -93,67 +69,30 @@ namespace Zerobased.Extensions
                 source = source.ToUpper();
                 value = value.ToUpper();
             }
-
             return source.Contains(value);
         }
 
-        public static string Replace(this string source, string oldValue, string newValue, bool ignoreCase)
-        {
-            var regex = new Regex(oldValue, RegexOptions.IgnoreCase);
-            var newSentence = regex.Replace(source, newValue);
-            return newSentence;
-        }
+        public static bool IsNullOrEmpty(this string str) => string.IsNullOrEmpty(str);
 
-        public static bool IsNullOrEmpty(this string str)
-        {
-            return string.IsNullOrEmpty(str);
-        }
+        public static bool IsNullOrWhiteSpace(this string str) => string.IsNullOrWhiteSpace(str);
 
-        public static bool IsNullOrWhiteSpace(this string str)
-        {
-            return string.IsNullOrWhiteSpace(str);
-        }
+        public static string[] Split(this string str, string delimeter, StringSplitOptions options = StringSplitOptions.None) => str.Split(new[] { delimeter }, options);
 
-        public static string[] Split(this string str, string delimeter, StringSplitOptions options = StringSplitOptions.None)
-        {
-            string[] parts = str.Split(new[] { delimeter }, options);
-            return parts;
-        }
-
-        public static string[] Split(this string str, char delimeter, StringSplitOptions options = StringSplitOptions.None)
-        {
-            string[] parts = str.Split(new[] { delimeter }, options);
-            return parts;
-        }
+        public static string[] Split(this string str, char delimeter, StringSplitOptions options = StringSplitOptions.None) => str.Split(new[] { delimeter }, options);
 
         [StringFormatMethod("format")]
-        public static string FormatWith(this string format, params object[] args)
-        {
-            return string.Format(format, args);
-        }
+        public static string FormatWith(this string format, params object[] args) => string.Format(format, args);
 
         [StringFormatMethod("format")]
-        public static string FormatWith(this string format, object arg0)
-        {
-            return string.Format(format, arg0);
-        }
+        public static string FormatWith(this string format, object arg0) => string.Format(format, arg0);
 
         [StringFormatMethod("format")]
-        public static string FormatWith(this string format, object arg0, object arg1)
-        {
-            return string.Format(format, arg0, arg1);
-        }
+        public static string FormatWith(this string format, object arg0, object arg1) => string.Format(format, arg0, arg1);
 
         [StringFormatMethod("format")]
-        public static string FormatWith(this string format, object arg0, object arg1, object arg2)
-        {
-            return string.Format(format, arg0, arg1, arg2);
-        }
+        public static string FormatWith(this string format, object arg0, object arg1, object arg2) => string.Format(format, arg0, arg1, arg2);
 
-        public static string TrimSafe(this string str)
-        {
-            return str?.Trim() ?? string.Empty;
-        }
+        public static string TrimSafe(this string str) => str?.Trim() ?? string.Empty;
 
         /// <summary>
         ///     Replace <paramref name="value"/> with empty string.
@@ -161,10 +100,7 @@ namespace Zerobased.Extensions
         /// <param name="str"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string Remove(this string str, string value)
-        {
-            return str.Replace(value, string.Empty);
-        }
+        public static string Remove(this string str, string value) => str.Replace(value, string.Empty);
 
         /// <summary>
         /// Converts string to bytes array without using Encoding.
@@ -180,19 +116,18 @@ namespace Zerobased.Extensions
 
         public static string FirstLetterToLower(this string str)
         {
-            if (str == null)
-                return null;
-
+            if (str.IsNullOrEmpty())
+            {
+                return str;
+            }
             if (str.Length > 1)
+            {
                 return char.ToLower(str[0]) + str.Substring(1);
-
-            return str.ToUpper();
+            }
+            return str.ToLower();
         }
 
-        public static bool StartsWithLetter(this string str)
-        {
-            return !str.IsNullOrEmpty() && Char.IsLetter(str[0]);
-        }
+        public static bool StartsWithLetter(this string str) => !str.IsNullOrEmpty() && Char.IsLetter(str[0]);
 
         public static string SubstringSafe(this string str, int startIndex, int length)
         {
@@ -200,9 +135,7 @@ namespace Zerobased.Extensions
             {
                 return string.Empty;
             }
-
             length = Math.Min(length, str.Length - startIndex);
-
             return str.Substring(startIndex, length);
         }
     }

@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Runtime;
 
 namespace Zerobased
 {
     /// <summary>
-    /// Represent singleton System.Random object
+    /// Represent static wrapper over <see cref="Random"/> instance
     /// </summary>
     public static class ZRandom
     {
@@ -91,10 +90,7 @@ namespace Zerobased
         /// </exception>
         public static double NextDouble(double maxValue)
         {
-            if (maxValue < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(maxValue), "maxValue must be greater than or equal to zero.");
-            }
+            maxValue = Check.Min(maxValue, 0d, nameof(maxValue));
             return _rand.NextDouble() * maxValue;
         }
 

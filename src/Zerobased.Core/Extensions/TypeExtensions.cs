@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Reflection;
 using System.Linq;
-using System.Collections.Concurrent;
-using System.ComponentModel;
+using System.Reflection;
 
 namespace Zerobased.Extensions
 {
     public static class TypeExtensions
     {
-        //private static readonly ConcurrentDictionary<Type, TypeConverter> _typeConverterCache = new ConcurrentDictionary<Type, TypeConverter>();
-        
         /// <summary>
-        /// Check if <paramref name="type"/> is System.Nullable[T].
+        ///     Check if <paramref name="type"/> is <see cref="Nullable{T}"/>.
         /// </summary>
         /// <param name="type">Type to check.</param>
         /// <returns></returns>
@@ -22,13 +18,13 @@ namespace Zerobased.Extensions
 
         /// <summary>
         ///     Returns the underlying type argument of the specified <paramref name="type"/>.
-        ///     If <paramref name="type"/> is not System.Nullable[T], 
+        ///     If <paramref name="type"/> is not <see cref="Nullable{T}"/>,
         ///     returns specified <paramref name="type"/> itself.
         /// </summary>
-        /// <param name="type">A System.Type object that describes a closed generic nullable type.</param>
+        /// <param name="type">A <see cref="Type"/> object that describes a closed generic null-able type.</param>
         /// <returns>
-        ///     If <paramref name="type"/> is System.Nullable[T] returns underlying type argument.
-        ///     Overwise returns <paramref name="type"/> itself.
+        ///     If <paramref name="type"/> is <see cref="Nullable{T}"/> returns underlying type argument.
+        ///     Otherwise returns <paramref name="type"/> itself.
         /// </returns>
         public static Type ExtractNullable(this Type type)
         {
@@ -50,33 +46,20 @@ namespace Zerobased.Extensions
         {
             type = type.ExtractNullable();
             TypeInfo typeInfo = type.GetTypeInfo();
-
             bool isPlain = typeInfo.IsEnum ||
                            typeInfo.IsPrimitive ||
                            type == typeof(DateTime) ||
                            type == typeof(string) ||
                            type == typeof(decimal) ||
                            type == typeof(Guid);
-
             return isPlain;
         }
 
-        //public static PropertyInfo GetKeyProperty(this Type type, string baseClass = null)
-        //{
-        //    PropertyInfo[] allProperties = type.GetTypeInfo().GetProperties();
-        //    PropertyInfo keyProp = allProperties.FirstOrDefault(prop => prop.IsKey(baseClass));
-
-        //    return keyProp;
-        //}
-
-        ///// <summary>
-        /////     Returns a type converter for the specified type.
-        ///// </summary>
-        ///// <param name="type">The System.Type of the target component.</param>
-        ///// <returns>A System.ComponentModel.TypeConverter for the specified type.</returns>
-        //public static TypeConverter GetConverter(this Type type)
-        //{
-        //    return _typeConverterCache.GetOrAdd(type, TypeDescriptor.GetConverter);
-        //}
+        public static PropertyInfo GetKeyProperty(this Type type)
+        {
+            PropertyInfo[] allProperties = type.GetTypeInfo().GetProperties();
+            PropertyInfo keyProp = allProperties.FirstOrDefault(prop => prop.IsKey(type));
+            return keyProp;
+        }
     }
 }

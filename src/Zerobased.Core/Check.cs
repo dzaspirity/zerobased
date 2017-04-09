@@ -8,12 +8,12 @@ using System.Collections.Generic;
 namespace Zerobased
 {
     /// <summary>
-    /// Helpers methods for checking arguments values
+    ///     Helpers methods for checking arguments values
     /// </summary>
     public static class Check
     {
         /// <summary>
-        /// Check if string argument is not null or empty
+        ///     Check if string <paramref name="argValue"/> is not null or empty
         /// </summary>
         /// <param name="argValue">Argument value for checking</param>
         /// <param name="argName">Argument name for correct exception</param>
@@ -34,7 +34,7 @@ namespace Zerobased
         }
 
         /// <summary>
-        /// Check if collection argument is not null or empty
+        ///     Check if collection <paramref name="argValue"/> is not null or empty
         /// </summary>
         /// <param name="argValue">Argument value for checking</param>
         /// <param name="argName">Argument name for correct exception</param>
@@ -55,7 +55,30 @@ namespace Zerobased
         }
 
         /// <summary>
-        /// Check if object argument is not null
+        ///     Check if enumerable <paramref name="argValue"/> is not null or empty and returns <see cref="IEnumerator{T}"/>,
+        ///     which points on the first item of the sequence
+        /// </summary>
+        /// <param name="argValue">Argument value for checking</param>
+        /// <param name="argName">Argument name for correct exception</param>
+        /// <param name="methodName">Caller name for better exception message</param>
+        /// <param name="filePath">Full path of the source file that contains the caller, for better exception message</param>
+        /// <param name="lineNumber">Line number in the source file that contains the caller, for better exception message</param>
+        /// <returns><see cref="IEnumerator{T}"/> of <paramref name="argValue"/></returns>
+        /// <exception cref="ArgumentException">If argument value is null or empty sequence</exception>
+        [NotNull]
+        public static IEnumerator<T> NotNullOrEmpty<T>(IEnumerable<T> argValue, [InvokerParameterName] string argName,
+            [CallerMemberName] string methodName = null, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = 0)
+        {
+            IEnumerator<T> enumerator = argValue?.GetEnumerator();
+            if (argValue == null || !enumerator.MoveNext())
+            {
+                throw new ArgumentException($"Enumerable argument {argName}{GetCallerDataString(methodName, filePath, lineNumber)} cannot be null or empty.", argName);
+            }
+            return enumerator;
+        }
+
+        /// <summary>
+        ///     Check if object <paramref name="argValue"/> is not null
         /// </summary>
         /// <param name="argValue">Argument value for checking</param>
         /// <param name="argName">Argument name for correct exception</param>
@@ -76,7 +99,7 @@ namespace Zerobased
         }
 
         /// <summary>
-        /// Check if nullable value type argument is not null
+        ///     Check if null-able value type argument is not null
         /// </summary>
         /// <param name="argValue">Argument value for checking</param>
         /// <param name="argName">Argument name for correct exception</param>
@@ -97,7 +120,7 @@ namespace Zerobased
         }
 
         /// <summary>
-        /// Check if value is not less than <paramref name="minValue"/>
+        ///     Check if <paramref name="argValue"/> is not less than <paramref name="minValue"/>
         /// </summary>
         /// <typeparam name="T">Type of the checking argument</typeparam>
         /// <param name="argValue">Argument value for checking</param>
@@ -115,6 +138,29 @@ namespace Zerobased
             if (compareResult < 0)
             {
                 throw new ArgumentOutOfRangeException(argName, $"Value of argument {argName}{GetCallerDataString(methodName, filePath, lineNumber)} cannot be less than {minValue}.");
+            }
+            return argValue;
+        }
+
+        /// <summary>
+        ///     Checks if <paramref name="argValue"/> satisfies the <paramref name="isValid"/>
+        /// </summary>
+        /// <typeparam name="T">Type of the checking argument</typeparam>
+        /// <param name="argValue"></param>
+        /// <param name="isValid"><see cref="Predicate{T}"/> checks if argument value is valid</param>
+        /// <param name="argName">Argument name for correct exception</param>
+        /// <param name="message">Exception message</param>
+        /// <param name="methodName">Caller name for better exception message</param>
+        /// <param name="filePath">Full path of the source file that contains the caller, for better exception message</param>
+        /// <param name="lineNumber">Line number in the source file that contains the caller, for better exception message</param>
+        /// <returns>Returns argument value without any changes</returns>
+        /// <exception cref="ArgumentException">If <paramref name="isValid"/> predicate returns false</exception>
+        public static T ByPredicate<T>([NoEnumeration]T argValue, Predicate<T> isValid, [InvokerParameterName] string argName, string message,
+            [CallerMemberName] string methodName = null, [CallerFilePath] string filePath = null, [CallerLineNumber] int lineNumber = 0)
+        {
+            if (!isValid(argValue))
+            {
+                throw new ArgumentException($"Argument {argName}{GetCallerDataString(methodName, filePath, lineNumber)} is not valid: {message}.", argName);
             }
             return argValue;
         }

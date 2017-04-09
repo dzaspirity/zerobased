@@ -2,10 +2,13 @@
 
 namespace Zerobased
 {
+    /// <summary>
+    ///     Helper class for double check lock
+    /// </summary>
     public static class Locker
     {
         /// <summary>
-        /// Execute standart double check lock thread safe operation.
+        ///     Execute double check lock thread safe operation.
         /// </summary>
         /// <param name="lockObj">Object to lock.</param>
         /// <param name="checkToExecute">Check if execution need.</param>

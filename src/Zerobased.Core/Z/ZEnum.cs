@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 
 namespace Zerobased
 {
     /// <summary>
-    /// Class represent methods that wrap some of System.Enum static methods to their generic versions.
+    ///     Class represent methods that wrap some of <see cref="Enum"/> static methods to their generic versions.
     /// </summary>
     public static class ZEnum
     {
         /// <summary>
-        ///     Generic wrapper for System.Enum.Parse method.
+        ///     Generic wrapper for <see cref="Enum.Parse(Type, string, bool)"/> method.
         ///     Converts the string representation of the name or numeric value of one or
         ///     more enumerated constants to an equivalent enumerated object. A parameter
         ///     specifies whether the operation is case-insensitive.
         /// </summary>
         /// <typeparam name="TEnum">An enumeration type</typeparam>
         /// <param name="value">A string containing the name or value to convert.</param>
-        /// <param name="ignoreCase"><value>true</value> to ignore case; <value>false</value> to regard case. <value>false</value> by default.</param>
+        /// <param name="ignoreCase">TRUE to ignore case; FALSE to regard case. FALSE by default.</param>
         /// <returns>An object of type <typeparamref name="TEnum"/> whose value is represented by <paramref name="value"/>.</returns>
         /// <exception cref="System.ArgumentNullException">
         ///     <paramref name="value"/> is null.
@@ -25,7 +26,7 @@ namespace Zerobased
         ///     <typeparamref name="TEnum"/> is not enum.
         /// </exception>
         /// <exception cref="System.ArgumentException">
-        ///     <paramref name="value"/> is either an empty string ("") 
+        ///     <paramref name="value"/> is either an empty string (<see cref="string.Empty"/>)
         ///     or only contains white space.
         ///     -or- <paramref name="value"/> is a name, but not one of the named
         ///     constants defined for the enumeration.
@@ -39,7 +40,7 @@ namespace Zerobased
         }
 
         /// <summary>
-        ///    Generic wrapper for System.Enum.GetNames method.
+        ///    Generic wrapper for <see cref="Enum.GetNames(Type)"/> method.
         ///    Retrieves an array of the names of the constants in a specified enumeration.
         /// </summary>
         /// <typeparam name="TEnum">An enumeration type.</typeparam>
@@ -55,13 +56,13 @@ namespace Zerobased
         }
 
         /// <summary>
-        ///     Generic wrapper for System.Enum.IsDefined method.
+        ///     Generic wrapper for <see cref="Enum.IsDefined(Type, object)"/> method.
         ///     Returns an indication whether a constant with a specified value exists in
         ///     a specified enumeration.
         /// </summary>
         /// <typeparam name="TEnum">An enumeration type</typeparam>
         /// <param name="value">The value in <typeparamref name="TEnum"/>.</param>
-        /// <returns><value>true</value> if a constant in <typeparamref name="TEnum"/> has a value equal to <paramref name="value"/>; otherwise, <value>false</value>.</returns>
+        /// <returns>TRUE if a constant in <typeparamref name="TEnum"/> has a value equal to <paramref name="value"/>; otherwise, FALSE.</returns>
         /// <exception cref="System.ArgumentNullException">
         ///     <paramref name="value"/> is null.
         /// </exception>
@@ -76,13 +77,13 @@ namespace Zerobased
         }
 
         /// <summary>
-        ///     Generic wrapper for System.Enum.GetValues method.
+        ///     Generic wrapper for <see cref="Enum.GetValues(Type)"/> method.
         ///     Retrieves an array of the values of the constants in a specified enumeration.
         /// </summary>
         /// <typeparam name="TEnum">An enumeration type.</typeparam>
         /// <returns>An array that contains the values of the constants in <typeparamref name="TEnum"/>.</returns>
         /// <exception cref="System.InvalidOperationException">
-        ///     The method is invoked by reflection in a reflection-only context, -or-enumType
+        ///     The method is invoked by reflection in a reflection-only context, -or- enumType
         ///     is a type from an assembly loaded in a reflection-only context.
         /// </exception>
         /// <exception cref="NotSupportedException">
@@ -96,12 +97,15 @@ namespace Zerobased
         }
 
         /// <summary>
-        /// Throw NotSupportedException exception if <typeparamref name="TEnum"/> is not enum.
+        ///     Throw <see cref="NotSupportedException"/> exception if <typeparamref name="TEnum"/> is not enum.
         /// </summary>
         /// <typeparam name="TEnum">Type to check.</typeparam>
+        /// <exception cref="NotSupportedException">
+        ///     <typeparamref name="TEnum"/> is not enum.
+        /// </exception>
         public static void CheckTypeParameter<TEnum>() where TEnum : struct
         {
-            if (!typeof(TEnum).IsEnum)
+            if (!typeof(TEnum).GetTypeInfo().IsEnum)
             {
                 throw new NotSupportedException("Generic parameter must be enum.");
             }

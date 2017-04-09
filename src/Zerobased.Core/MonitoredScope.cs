@@ -1,65 +1,109 @@
 ﻿using System;
+using System.Collections.Generic;
 using Zerobased.Extensions;
 
 namespace Zerobased
 {
+    /// <summary>
+    ///     Class provides ability to measure performance
+    /// </summary>
+    /// <example>
+    ///     This sample shows how to use the <see cref="MonitoredScope"/> with console output.
+    ///     <code>
+    ///     using(var scope = MonitoredScope.Console("Send data"))
+    ///     {
+    ///         // make some actions
+    ///         scope.Poke("Step 1 done");
+    ///         // make other actions
+    ///     }
+    ///     </code>
+    /// </example>
     public class MonitoredScope : IDisposable
     {
-        private const char LevelChar = ' ';
-        private static int _instancesCount;
-        private readonly Action<TimeSpan, string> _onMessage;
-        private readonly string _name;
-        private readonly DateTime _ctorTime = DateTime.UtcNow;
-        private readonly int _level;
+        /// <summary>
+        ///     Delegate for printing message. <see cref="TimeSpan"/> parameter - time passed from creating the scope.
+        ///     <see cref="string"/> parameter - message to print.
+        /// </summary>
+        public Action<TimeSpan, string> OnMessage { get; }
 
-        public MonitoredScope(string name, Action<TimeSpan, string> onMessage, bool messageOnEnter = true)
+        /// <summary>
+        ///     Name of scope (will be included to message)
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        ///     UTC time of creating the scope
+        /// </summary>
+        public DateTime CtorTime { get; } = DateTime.UtcNow;
+
+        /// <summary>
+        ///     Creates an instance of <see cref="MonitoredScope"/>
+        /// </summary>
+        /// <param name="name">Name of new scope</param>
+        /// <param name="onMessage">Delegate for printing message</param>
+        public MonitoredScope(string name, Action<TimeSpan, string> onMessage)
         {
-            _level = ++_instancesCount;
-            if (onMessage == null)
-            {
-                throw new ArgumentNullException(nameof(onMessage));
-            }
-
-            _name = name.IsNullOrWhiteSpace() ? DateTime.UtcNow.ToString("hh:mm:ss.ff") : name;
-            _onMessage = onMessage;
-
-            if (messageOnEnter)
-            {
-                RaiseMessage("Enter scope");
-            }
+            onMessage = Check.NotNull(onMessage, nameof(onMessage));
+            Name = name.IsNullOrWhiteSpace() ? DateTime.UtcNow.ToString("HH:mm:ss.ff") : name;
+            OnMessage = onMessage;
+            RaiseMessage("Enter scope");
         }
 
-        public void Poke(string msg = null)
+        /// <summary>
+        ///     Send new message
+        /// </summary>
+        /// <param name="msg">Message to send</param>
+        /// <returns>Current instance of <see cref="MonitoredScope"/></returns>
+        public MonitoredScope Poke(string msg = null)
         {
             RaiseMessage(msg.IsNullOrEmpty() ? "poke" : msg);
+            return this;
         }
 
         private void RaiseMessage(string message)
         {
-            _onMessage(DateTime.UtcNow - _ctorTime, "{0:G}{3}'{1}': {2}".FormatWith(DateTime.UtcNow, _name, message, string.Empty.PadLeft(_level*2, LevelChar)));
+            OnMessage(DateTime.UtcNow - CtorTime, $"{DateTime.UtcNow:G}'{Name}': {message}");
         }
 
+        /// <summary>
+        ///     Sends "Leave scope" message
+        /// </summary>
         public void Dispose()
         {
             RaiseMessage("Leave scope");
-            _instancesCount--;
         }
 
-        public static MonitoredScope Console(string name = null, bool messageOnEnter = true)
+        /// <summary>
+        ///     Creates new instance of <see cref="MonitoredScope"/> to write messages
+        ///     to standard output (<see cref="System.Console.WriteLine(string)"/>)
+        /// </summary>
+        /// <param name="name">Name of new scope</param>
+        public static MonitoredScope Console(string name = null)
         {
-            var scope = new MonitoredScope(name, (ts, msg) => System.Console.WriteLine("{0} ({1})", msg, ts), messageOnEnter);
+            var scope = new MonitoredScope(name, (ts, msg) => System.Console.WriteLine($"{msg} ({ts})"));
             return scope;
         }
 
-        public static MonitoredScope Debug(string name = null, bool messageOnEnter = true)
+        /// <summary>
+        ///     Creates new instance of <see cref="MonitoredScope"/> to write messages
+        ///     to Debug output (<see cref="System.Diagnostics.Debug.WriteLine(string)"/>)
+        /// </summary>
+        /// <param name="name">Name of new scope</param>
+        public static MonitoredScope Debug(string name = null)
         {
-            var scope = new MonitoredScope(name, (ts, msg) => System.Diagnostics.Debug.WriteLine("{0} ({1})", msg, ts), messageOnEnter);
+            var scope = new MonitoredScope(name, (ts, msg) => System.Diagnostics.Debug.WriteLine($"{msg} ({ts})"));
             return scope;
         }
 
-        public static MonitoredScope File(string filePath, string name = null, bool messageOnEnter = true)
+        /// <summary>
+        ///     Creates new instance of <see cref="MonitoredScope"/> to write messages
+        ///     to standard output (<see cref="System.IO.File.AppendAllLines(string, IEnumerable{string})"/>)
+        /// </summary>
+        /// <param name="filePath">Path of output file</param>
+        /// <param name="name">Name of new scope</param>
+        public static MonitoredScope File(string filePath, string name = null)
         {
-            var scope = new MonitoredScope(name, (ts, msg) => System.IO.File.AppendAllLines(filePath, new[] { "{0} ({1})".FormatWith(msg, ts) }), messageOnEnter);
+            var scope = new MonitoredScope(name, (ts, msg) => System.IO.File.AppendAllLines(filePath, new[] { $"{msg} ({ts})" }));
             return scope;
         }
     }
