@@ -142,7 +142,7 @@ namespace Zerobased.Extensions
         /// </returns>
         public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> source) where T : class
         {
-            return source.WhereNotNull(item => item);
+            return WhereNotNull(source, item => item);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Zerobased.Extensions
         /// </returns>
         public static IEnumerable<string> WhereNotNullOrEmpty(this IEnumerable<string> source)
         {
-            return source.Where(item => !item.IsNullOrEmpty());
+            return WhereNotNullOrEmpty(source, item => item);
         }
 
         /// <summary>
@@ -210,10 +210,10 @@ namespace Zerobased.Extensions
         /// </summary>
         /// <typeparam name="TKey">The type of the key returned by keySelector.</typeparam>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">An System.Collections.Generic.IEnumerable[T] whose elements to group.</param>
+        /// <param name="source">An <see cref="IEnumerable{T}"/> whose elements to group.</param>
         /// <param name="keySelector">A function to extract the key for each element.</param>
         /// <returns>
-        ///     System.Collections.Generic.Dictionary[TKey, T] where keys are results
+        ///     <see cref="Dictionary{TKey, TValue}"/> where keys are results
         ///     of <paramref name="keySelector"/> functions and values are lists of
         ///     grouped by <paramref name="keySelector"/> elements.
         /// </returns>
@@ -232,12 +232,12 @@ namespace Zerobased.Extensions
         }
 
         /// <summary>
-        ///     Sorts the elements of a sequence in ascending order according to a property path.
+        /// Sorts the elements of a sequence in ascending order according to a property path.
         /// </summary>
         /// <typeparam name="T">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to order.</param>
         /// <param name="propertyPath">Property path to sorting.</param>
-        /// <param name="desc">Sort in descending order if <value>TRUE</value>, overwise in ascending order.</param>
+        /// <param name="desc">Sort in descending order if TRUE, otherwise in ascending order.</param>
         /// <returns>
         ///     <see cref="IOrderedEnumerable{TElement}"/> whose elements are sorted according to a property path.
         /// </returns>
@@ -257,9 +257,9 @@ namespace Zerobased.Extensions
         ///     Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
         /// </summary>
         /// <typeparam name="T">The type of the elements of source.</typeparam>
-        /// <param name="source">An System.Linq.IOrderedEnumerable[T] that contains elements to sort.</param>
+        /// <param name="source"><see cref="IOrderedEnumerable{TElement}"/> that contains elements to sort.</param>
         /// <param name="propertyPath">Property path to sorting.</param>
-        /// <param name="desc">Sort in descending order if <value>TRUE</value>, overwise in ascending order.</param>
+        /// <param name="desc">Sort in descending order if TRUE, otherwise in ascending order.</param>
         /// <returns>
         ///     <see cref="IOrderedEnumerable{TElement}"/> whose elements are sorted according to a property path.
         /// </returns>
@@ -296,15 +296,12 @@ namespace Zerobased.Extensions
             while (enumerator.MoveNext())
             {
                 var value = selector(enumerator.Current);
-
                 if (minValue.CompareTo(value) < 0)
                 {
                     minValue = value;
                     min = enumerator.Current;
                 }
             }
-
-
             return min;
         }
 
@@ -340,36 +337,6 @@ namespace Zerobased.Extensions
             return max;
         }
 
-        public static bool MinMax<T>(this IEnumerable<T> source, out T min, out T max)
-        {
-            Comparer<T> comparer = Comparer<T>.Default;
-            var enumerator = source.GetEnumerator();
-
-            if (enumerator.MoveNext())
-            {
-                min = max = enumerator.Current;
-            }
-            else
-            {
-                min = max = default(T);
-                return false;
-            }
-
-            while (enumerator.MoveNext())
-            {
-                if (comparer.Compare(enumerator.Current, min) < 0)
-                {
-                    min = enumerator.Current;
-                }
-                else if (comparer.Compare(enumerator.Current, max) > 0)
-                {
-                    max = enumerator.Current;
-                }
-            }
-
-            return true;
-        }
-
         /// <summary>
         ///     Concatenates the members of a collection, using the specified separator between each member.
         /// </summary>
@@ -378,7 +345,7 @@ namespace Zerobased.Extensions
         /// <param name="separator">The string to use as a separator.</param>
         /// <returns>
         ///     A string that consists of the members of values delimited by the separator
-        ///     string. If values has no members, the method returns System.String.Empty.
+        ///     string. If values has no members, the method returns <see cref="string.Empty"/>.
         /// </returns>
         public static string Join<T>(this IEnumerable<T> values, string separator)
         {
@@ -395,11 +362,11 @@ namespace Zerobased.Extensions
         /// <param name="format">Format applied for each element before concatenating.</param>
         /// <returns>
         ///     A string that consists of the members of values delimited by the separator
-        ///     string. If values has no members, the method returns System.String.Empty.
+        ///     string. If values has no members, the method returns <see cref="string.Empty"/>.
         /// </returns>
         public static string Join<T>(this IEnumerable<T> values, string separator, string format)
         {
-            return string.Join(separator, values.Select(i => format.FormatWith(i)));
+            return string.Join(separator, values.Select(item => format.FormatWith(item)));
         }
 
         /// <summary>
@@ -412,7 +379,7 @@ namespace Zerobased.Extensions
         /// <param name="toString">Converts values to string before concatenating. </param>
         /// <returns>
         ///     A string that consists of the members of values delimited by the separator
-        ///     string. If values has no members, the method returns System.String.Empty.
+        ///     string. If values has no members, the method returns <see cref="string.Empty"/>.
         /// </returns>
         public static string Join<T>(this IEnumerable<T> values, string separator, Func<T, string> toString)
         {
@@ -438,25 +405,27 @@ namespace Zerobased.Extensions
             return values.SelectMany(items => items);
         }
 
-        public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> values, int count)
+        public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> values, int chunkSize)
         {
-            List<T> buffer = new List<T>(count);
+            values = Check.NotNull(values, nameof(values));
+            chunkSize = Check.Min(chunkSize, 1, nameof(chunkSize));
+            List<T> chunk = new List<T>(chunkSize);
             var enumerator = values.GetEnumerator();
 
             while (enumerator.MoveNext())
             {
-                buffer.Add(enumerator.Current);
+                chunk.Add(enumerator.Current);
 
-                if (buffer.Count == count)
+                if (chunk.Count == chunkSize)
                 {
-                    yield return buffer;
-                    buffer = new List<T>(count);
+                    yield return chunk;
+                    chunk = new List<T>(chunkSize);
                 }
             }
 
-            if (buffer.Count > 0)
+            if (chunk.Count > 0)
             {
-                yield return buffer;
+                yield return chunk;
             }
         }
 

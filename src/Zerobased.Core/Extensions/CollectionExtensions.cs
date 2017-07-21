@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 
 namespace Zerobased.Extensions
@@ -14,11 +15,10 @@ namespace Zerobased.Extensions
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <param name="collection">Source collection for search in.</param>
         /// <param name="predicate">Condition of matching.</param>
-        /// <returns>Index of a item that matchs with <paramref name="predicate"/></returns>
-        public static int IndexOf<T>(this ICollection<T> collection, Func<T, bool> predicate)
+        /// <returns>Index of a item that matches with <paramref name="predicate"/></returns>
+        public static int IndexOf<T>(this ICollection<T> collection, Predicate<T> predicate)
         {
             int index = -1;
-
             foreach (var item in collection)
             {
                 index++;
@@ -35,7 +35,7 @@ namespace Zerobased.Extensions
         /// </summary>
         /// <typeparam name="T">Collection items type.</typeparam>
         /// <param name="collection">Collection to test.</param>
-        /// <returns><value>TRUE</value> if the value parameter is null or an empty collection; otherwise, <value>FALSE</value>.</returns>
+        /// <returns>TRUE if the value parameter is null or an empty collection; otherwise, FALSE.</returns>
         public static bool IsNullOrEmpty<T>(this ICollection<T> collection)
         {
             return collection == null || collection.Count == 0;
@@ -67,7 +67,6 @@ namespace Zerobased.Extensions
             collection = Check.NotNull(collection, nameof(collection));
             items = Check.NotNull(items, nameof(items));
             List<TItem> list = collection as List<TItem>;
-
             if (list != null)
             {
                 list.AddRange(items);
@@ -79,7 +78,6 @@ namespace Zerobased.Extensions
                     collection.Add(item);
                 }
             }
-
             return collection;
         }
 
@@ -106,7 +104,6 @@ namespace Zerobased.Extensions
             {
                 collection.Remove(item);
             }
-
             return collection;
         }
 

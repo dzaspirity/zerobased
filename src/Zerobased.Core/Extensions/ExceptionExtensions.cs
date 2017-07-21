@@ -30,19 +30,18 @@ namespace Zerobased.Extensions
         /// <returns></returns>
         public static IEnumerable<Exception> Expand(this Exception exception)
         {
-            Exception curExc = exception;
-
-            while (curExc != null)
+            Exception currentException = exception;
+            while (currentException != null)
             {
-                yield return curExc;
-                curExc = curExc.InnerException;
+                yield return currentException;
+                currentException = currentException.InnerException;
             }
         }
 
         /// <summary>
         ///     Expands <paramref name="exception"/> and inner exceptions to string.
         /// </summary>
-        /// <param name="exception"></param>
+        /// <param name="exception">Exception to expand</param>
         /// <param name="format">
         ///     {0} - GetType().FullName, {1} - Message, {2} - StackTrace
         /// </param>

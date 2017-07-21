@@ -18,16 +18,18 @@ namespace Zerobased.Extensions
 
             if (memberExpression == null)
             {
-                var unaryExpression = propertyExpression.Body as UnaryExpression;
-                if (unaryExpression != null)
+                if (propertyExpression.Body is UnaryExpression unaryExpression)
+                {
                     memberExpression = unaryExpression.Operand as MemberExpression;
+                }
             }
 
             if (memberExpression != null)
             {
-                var parameterExpression = memberExpression.Expression as ParameterExpression;
-                if (parameterExpression != null && parameterExpression.Name == propertyExpression.Parameters[0].Name)
+                if (memberExpression.Expression is ParameterExpression parameterExpression && parameterExpression.Name == propertyExpression.Parameters[0].Name)
+                {
                     return memberExpression.Member.Name;
+                }
             }
 
             throw new ArgumentException("Invalid expression.", nameof(propertyExpression));

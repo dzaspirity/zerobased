@@ -229,7 +229,6 @@ namespace Zerobased.Extensions
             {
                 value = fallbackValueProvider(key);
             }
-
             return value;
         }
     }

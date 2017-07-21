@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

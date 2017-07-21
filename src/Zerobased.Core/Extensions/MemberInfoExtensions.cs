@@ -20,8 +20,7 @@ namespace Zerobased.Extensions
         public static bool IsDefined<TAttr>(this MemberInfo info, bool inherit = false)
             where TAttr : Attribute
         {
-            var attributes = ZAttribute.GetCustomAttributes<TAttr>(info);
-            return attributes.Length > 0;
+            return info.IsDefined(typeof(TAttr), inherit);
         }
     }
 }
