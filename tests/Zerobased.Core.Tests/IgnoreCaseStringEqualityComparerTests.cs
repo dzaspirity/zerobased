@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 
 namespace Zerobased.Core.Tests
 {
@@ -39,21 +36,21 @@ namespace Zerobased.Core.Tests
             Assert.Equal(int.MinValue, IgnoreCaseStringEqualityComparer.Instance.GetHashCode(null));
         }
 
-        [Fact(DisplayName = "Should return TRUE for the same string")]
+        [Fact(DisplayName = "Should return same hash code for the same string")]
         public void GetHashCodeOfSameStrings()
         {
             Assert.Equal(IgnoreCaseStringEqualityComparer.Instance.GetHashCode("string"),
                 IgnoreCaseStringEqualityComparer.Instance.GetHashCode("string"));
         }
 
-        [Fact(DisplayName = "Should return TRUE for strings which have same chars but in different cases")]
+        [Fact(DisplayName = "Should return same hash code for strings which have same chars but in different cases")]
         public void GetHashCodeOfSimilarStrings()
         {
             Assert.Equal(IgnoreCaseStringEqualityComparer.Instance.GetHashCode("string"),
                 IgnoreCaseStringEqualityComparer.Instance.GetHashCode("StRing"));
         }
 
-        [Fact(DisplayName = "Should return FALSE for different strings")]
+        [Fact(DisplayName = "Should return different hash codes for different strings")]
         public void GetHashCodeOfDifferentStrings()
         {
             Assert.NotEqual(IgnoreCaseStringEqualityComparer.Instance.GetHashCode("string"),
