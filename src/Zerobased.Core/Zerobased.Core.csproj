@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
     <RootNamespace>Zerobased</RootNamespace>
-    <SignAssembly>False</SignAssembly>
+    <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyFile>..\..\zaverden.snk</AssemblyOriginatorKeyFile>
-    <Version>2.0.0</Version>
+    <Version>2.0.0-beta.0</Version>
     <Description>Extensions and helpers which I'm using in most of projects</Description>
     <PackageProjectUrl>https://github.com/zaverden/zerobased</PackageProjectUrl>
     <PackageIconUrl>https://camo.githubusercontent.com/6ca79467925abd09bdae8d9bfc7463a25eedeb3d/68747470733a2f2f646f776e6c6f61642d636f6465706c65782e7365632e732d6d7366742e636f6d2f446f776e6c6f61643f50726f6a6563744e616d653d7a65726f626173656426446f776e6c6f616449643d393130323631264275696c643d3231303138</PackageIconUrl>
@@ -14,6 +14,8 @@
     <PackageLicenseUrl>https://github.com/zaverden/zerobased/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/zaverden/zerobased</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>Moving to netstandard1.6.
+Sorry for breaking changes.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
